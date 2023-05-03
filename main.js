@@ -1,8 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
-const sourceDir = __dirname + "\\source";
-const distDir = __dirname + "\\dist";
+const sourceDir = __dirname + "\\source";//путь к папке с проектом
+const distDir = __dirname + "\\dist";// путь к папке с результатом
 
 // Возвращает данные для файла с заменённым require на import
 const getResultFile = (path) => {
@@ -20,14 +20,14 @@ const getResultFile = (path) => {
 
 //рекурсивная проверка директории
 const getFilesRecursively = (directory) => {
-    const filesInDirectory = fs.readdirSync(directory);
+    const filesInDirectory = fs.readdirSync(directory);//Получаем список файлов в директории
     for (const file of filesInDirectory) {
-        const absolutePath = path.join(directory, file);//получаем абсолютный к объекту
+        const absolutePath = path.join(directory, file);//получаем абсолютный путь к объекту
         const resPath = absolutePath.replace(sourceDir, distDir);//получаем абсолютный путь к результирующему объекту
-        //если объект - папка, создаем новую в нужной директории
+        //если объект - папка, создаем папку в результирующей директории
         if (fs.statSync(absolutePath).isDirectory()) {
             fs.mkdirSync(resPath, { recursive: true });
-            getFilesRecursively(absolutePath);
+            getFilesRecursively(absolutePath);//рекурсивной проверяем эту папку
         } else {
             //проверяем является ли файл .js
             if(absolutePath.substring(absolutePath.length - 3) == ".js"){
