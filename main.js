@@ -6,7 +6,7 @@ const distDir = __dirname + "\\dist";// путь к папке с результ
 
 // Возвращает данные для файла с заменённым require на import
 const getResultFile = (path) => {
-    var dataArray = fs.readFileSync(path).toString().split("\n");
+    let dataArray = fs.readFileSync(path).toString().split("\n");
     for (i in dataArray) {
         if (dataArray[i].includes("require")) {
             dataArray[i] = dataArray[i].replace("const", "import");
@@ -22,8 +22,8 @@ const getResultFile = (path) => {
 const getFilesRecursively = (directory) => {
     const filesInDirectory = fs.readdirSync(directory);//Получаем список файлов в директории
     for (const file of filesInDirectory) {
-        const absolutePath = path.join(directory, file);//получаем абсолютный путь к объекту
-        const resPath = absolutePath.replace(sourceDir, distDir);//получаем абсолютный путь к результирующему объекту
+        let absolutePath = path.join(directory, file);//получаем абсолютный путь к объекту
+        let resPath = absolutePath.replace(sourceDir, distDir);//получаем абсолютный путь к результирующему объекту
         //если объект - папка, создаем папку в результирующей директории
         if (fs.statSync(absolutePath).isDirectory()) {
             fs.mkdirSync(resPath, { recursive: true });
