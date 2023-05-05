@@ -4,34 +4,20 @@ const path = require("path");
 const sourceDir = __dirname + "\\source";//путь к папке с проектом
 const distDir = __dirname + "\\dist";// путь к папке с результатом
 
-//1 вариант миграции
-const firtsVariant = (line) => {
-    let sIndex, eIndex;
-    let res;
-    res = "import";
-    sIndex = line.indexOf(" ");
-    eIndex = line.indexOf(" ", sIndex + 1);
-    res += line.substring(sIndex, eIndex) + " from ";
-    sIndex = line.indexOf("'");
-    eIndex = line.indexOf("'", sIndex + 1);
-    res += line.substring(sIndex, eIndex) + "';";
-    res = res.replace(/\\/g, '');
-    res += "\r";
-    return res;
-};
-
-//2 вариант миграции
-const secondVariant = (line) => {
+//выполняем миграцию для строки
+const MigrateLine = (line, flag) => {
     let sIndex, eIndex;
     let res;
     res = "import ";
     sIndex = line.indexOf(" ");
     eIndex = line.indexOf(" ", sIndex + 1);
-    res += "{" + line.substring(sIndex + 1, eIndex) + "}" + " from ";
+    if(flag)
+        res += "{" + line.substring(sIndex + 1, eIndex) + "}" + " from ";
+    else
+        res += line.substring(sIndex, eIndex) + " from ";
     sIndex = line.indexOf("'");
     eIndex = line.indexOf("'", sIndex + 1);
     res += line.substring(sIndex, eIndex) + "';";
-    res = res.replace(/\\/g, '');
     res += "\r";
     return res;
 };
@@ -44,9 +30,9 @@ const getResultFile = (path) => {
             if((dataArray[i].startsWith("const") || dataArray[i].startsWith("var")) 
             && (dataArray[i].endsWith(";") || dataArray[i].endsWith(";\r"))){
                 if(dataArray[i].endsWith(");") || dataArray[i].endsWith(");\r"))
-                    dataArray[i] = firtsVariant(dataArray[i]);
+                    dataArray[i] = MigrateLine(dataArray[i], false);
                 else
-                    dataArray[i] = secondVariant(dataArray[i]);  
+                    dataArray[i] = MigrateLine(dataArray[i], true);  
             }
         }
     }
